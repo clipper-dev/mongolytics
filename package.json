@@ -4,14 +4,17 @@
   "description": "Monorepo for the Mongolytics project",
   "private": false,
   "scripts": {
-    "build": "npm run build -w @clipper-dev/mongolytics-next",
-    "dev": "npm run dev -w @clipper-dev/mongolytics-next"     
+  "build:pkg": "npm run build -w @clipper-dev/mongolytics-next",
+  "dev:pkg": "npm run dev -w @clipper-dev/mongolytics-next",
+  "build:web": "npm run build -w website",
+  "dev:web": "npm run dev -w website"    
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "apps/*"
   ],
   "devDependencies": {
     "@types/node": "^24.3.0",
