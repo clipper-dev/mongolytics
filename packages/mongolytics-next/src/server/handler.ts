@@ -1,24 +1,29 @@
 // /src/server/handler.ts
-import { NextApiRequest, NextApiResponse } from 'next';
-import { connectToDatabase } from './db';
-import { SessionDataPayload } from '../types';
+import { NextApiRequest, NextApiResponse } from "next";
+import { connectToDatabase } from "./db";
+import { SessionDataPayload } from "../types";
+import { ObjectId } from "mongodb";
 
-export async function mongolyticsHandler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ message: 'Method Not Allowed' });
+export async function mongolyticsHandler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  if (req.method !== "POST") {
+    return res.status(405).json({ message: "Method Not Allowed" });
   }
 
   try {
     const sessionData: SessionDataPayload = req.body;
     const { db } = await connectToDatabase();
-    const collection = db.collection('sessions');
+    const collection = db.collection("sessions");
 
     // Enrich with server-side data
-    const ipAddress = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
-    const userAgent = req.headers['user-agent'];
+    const ipAddress =
+      req.headers["x-forwarded-for"] || req.socket.remoteAddress;
+    const userAgent = req.headers["user-agent"];
 
     await collection.updateOne(
-      { _id: sessionData.sessionId },
+      { _id: new ObjectId(sessionData.sessionId) },
       {
         $set: {
           lastSeenAt: new Date(),
@@ -41,9 +46,9 @@ export async function mongolyticsHandler(req: NextApiRequest, res: NextApiRespon
       { upsert: true }
     );
 
-    return res.status(200).json({ message: 'Session tracked' });
+    return res.status(200).json({ message: "Session tracked" });
   } catch (error) {
-    console.error('Mongolytics API Error:', error);
-    return res.status(500).json({ message: 'Internal Server Error' });
+    console.error("Mongolytics API Error:", error);
+    return res.status(500).json({ message: "Internal Server Error" });
   }
 }
