@@ -1,15 +1,15 @@
 # `mongolytics-next`
 
-[![NPM Version](https://img.shields.io/npm/v/@your-scope/mongolytics-next.svg)](https://www.npmjs.com/package/@your-scope/mongolytics-next)
-[![License](https://img.shields.io/npm/l/@your-scope/mongolytics-next.svg)](https://github.com/your-username/mongolytics/blob/main/LICENSE)
+[![NPM Version](https://img.shields.io/npm/v/@clipper-dev/mongolytics-next.svg)](https://www.npmjs.com/package/@clipper-dev/mongolytics-next)
+[![License](https://img.shields.io/npm/l/@clipper-dev/mongolytics-next.svg)](https://github.com/your-username/mongolytics/blob/main/LICENSE)
 
 A lightweight, self-hosted analytics solution for Next.js applications, supporting both the **App Router** and **Pages Router**. Powered by your own MongoDB database, Mongolytics allows you to take full ownership of your user data.
 
 ## Key Features
 
--   **✅ Supports App & Pages Routers:** Simple setup for both modern and legacy Next.js projects.
+-   **✅ Universal Next.js Support:** Simple, consistent setup for both App and Pages Routers.
 -   **✅ Full Data Ownership:** Your analytics data is stored in your own MongoDB instance.
--   **🚀 Easy Integration:** Get started in minutes with a simple API route and a React Hook.
+-   **🚀 Drop-in Component:** Get started in minutes with a simple API handler and a single React component.
 -   **⚡️ Performant & Non-Blocking:** Designed to be invisible. The tracking script uses `navigator.sendBeacon` to ensure it never slows down your user experience.
 
 ## Prerequisites
@@ -20,18 +20,17 @@ A lightweight, self-hosted analytics solution for Next.js applications, supporti
 ## Installation
 
 ```bash
-npm install @your-scope/mongolytics-next uuid
+npm install @clipper-dev/mongolytics-next uuid
 npm install -D @types/uuid
 ```
-*(Note: Replace `@your-scope` with your actual NPM scope/username)*
 
 ## Setup Guide
 
-Follow the guide for your specific Next.js version.
+Getting started is a simple three-step process.
 
-### 1. Configure Environment Variables (For Both Routers)
+### Step 1: Configure Environment Variables
 
-Create a `.env.local` file in the root of your Next.js project.
+Create a `.env.local` file in the root of your Next.js project. This tells Mongolytics how to connect to your database.
 
 ```env
 # .env.local
@@ -42,154 +41,101 @@ MONGOLYTICS_DB_NAME="your-analytics-database-name"
 
 ---
 
-### 2. Setup for App Router (Next.js 13+)
+### Step 2: Create the API Endpoint
 
-This is the default and recommended setup for modern Next.js applications.
+This single API endpoint securely receives tracking data. **Choose the setup for your router type.**
 
-#### A. Create the API Endpoint
+#### For App Router (Next.js 13+)
 
-Create a new file at `app/api/mongolytics/route.ts`. This file will handle the tracking requests.
+Create a new file at `app/api/mongolytics/route.ts` and export our pre-built handler.
 
 ```typescript
 // app/api/mongolytics/route.ts
-import { NextResponse } from 'next/server';
-import { MongoClient } from 'mongodb';
+import { mongolyticsAppRouteHandler as POST } from '@clipper-dev/mongolytics-next/server';
 
-// Re-using the same env variables
-const uri = process.env.MONGOLYTICS_URI;
-const dbName = process.env.MONGOLYTICS_DB_NAME;
-
-// Basic validation
-if (!uri || !dbName) {
-  throw new Error('Missing Mongolytics environment variables');
-}
-
-// Re-use the same MongoDB client across requests
-let client: MongoClient;
-
-export async function POST(request: Request) {
-  try {
-    const sessionData = await request.json();
-    
-    if (!client) {
-      client = new MongoClient(uri!);
-      await client.connect();
-    }
-    const db = client.db(dbName);
-    const collection = db.collection('sessions');
-
-    const ipAddress = request.headers.get('x-forwarded-for') || 'unknown';
-    const userAgent = request.headers.get('user-agent') || 'unknown';
-    
-    await collection.updateOne(
-      { _id: sessionData.sessionId },
-      {
-        $set: {
-          lastSeenAt: new Date(),
-          currentUrl: sessionData.url,
-          userAgent: userAgent,
-        },
-        $inc: { pageviews: 1 },
-        $setOnInsert: {
-          _id: sessionData.sessionId,
-          visitorId: sessionData.visitorId,
-          startTimestamp: new Date(),
-          landingPage: sessionData.url,
-          hostname: sessionData.hostname,
-          language: sessionData.language,
-          screenResolution: sessionData.screenResolution,
-          ipAddress: ipAddress,
-        },
-      },
-      { upsert: true }
-    );
-
-    return NextResponse.json({ message: 'Session tracked' }, { status: 200 });
-  } catch (error) {
-    console.error('Mongolytics API Error:', error);
-    return NextResponse.json({ message: 'Internal Server Error' }, { status: 500 });
-  }
-}
+export { POST };
 ```
 
-#### B. Add the Tracking Hook
+#### For Pages Router (Legacy)
 
-The `useMongolytics` hook is a client component. The best place to use it is in your root `layout.tsx` file by wrapping it in a simple client component.
+Create a new file at `pages/api/mongolytics.ts`.
 
-First, create a new client component:
-**`components/MongolyticsTracker.tsx`**
-```tsx
-'use client';
+```typescript
+// pages/api/mongolytics.ts
+import { mongolyticsPagesRouterHandler } from '@clipper-dev/mongolytics-next/server';
 
-import { useMongolytics } from '@your-scope/mongolytics-next/client';
-
-export function MongolyticsTracker() {
-  // This hook will track page views automatically
-  useMongolytics();
-
-  return null; // This component renders nothing
-}
-```
-
-Next, add this component to your root layout:
-**`app/layout.tsx`**
-```tsx
-import { MongolyticsTracker } from '../components/MongolyticsTracker';
-
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
-  return (
-    <html lang="en">
-      <body>
-        <MongolyticsTracker />
-        {children}
-      </body>
-    </html>
-  )
-}
+export default mongolyticsPagesRouterHandler;
 ```
 
 ---
 
-### 3. Setup for Pages Router (Next.js 12 or legacy projects)
+### Step 3: Add the Tracking Component
 
-For projects using the `pages` directory.
+Add the `<Mongolyth />` component to your root layout file. It automatically detects page changes and sends tracking events.
 
-#### A. Create the API Endpoint
+#### For App Router (Next.js 13+)
 
-Create a new file at `pages/api/mongolytics.ts`. Our pre-built handler makes this very simple.
+Add the component to `app/layout.tsx`.
 
-```typescript
-// pages/api/mongolytics.ts
-import { mongolyticsHandler } from '@your-scope/mongolytics-next/server';
+```tsx
+// app/layout.tsx
+import { Mongolyth } from '@clipper-dev/mongolytics-next/client';
 
-export default mongolyticsHandler;
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en">
+      <body>
+        <Mongolyth />
+        {children}
+      </body>
+    </html>
+  );
+}
 ```
 
-#### B. Add the Tracking Hook
+#### For Pages Router (Legacy)
 
-Enable site-wide tracking by adding the `useMongolytics` hook to your `pages/_app.tsx` file. **You must specify `routerType: 'pages'`**.
+Add the component to `pages/_app.tsx` and specify the `routerType`.
 
 ```tsx
 // pages/_app.tsx
+import { Mongolyth } from '@clipper-dev/mongolytics-next/client';
 import type { AppProps } from 'next/app';
-import { useMongolytics } from '@your-scope/mongolytics-next/client';
-import '../styles/globals.css';
 
 function MyApp({ Component, pageProps }: AppProps) {
-  // Pass the 'pages' option for legacy router support
-  useMongolytics({ routerType: 'pages' });
-
-  return <Component {...pageProps} />;
+  return (
+    <>
+      <Mongolyth routerType="pages" />
+      <Component {...pageProps} />
+    </>
+  );
 }
 
 export default MyApp;
 ```
 
 ---
+
+## Advanced Usage: The `useMongolytics` Hook
+
+For more complex use cases where you might need to integrate analytics tracking with other logic, you can use the underlying `useMongolytics` hook directly instead of the `<Mongolyth />` component.
+
+```tsx
+'use client';
+
+import { useMongolytics } from '@clipper-dev/mongolytics-next/client';
+
+function MyCustomComponent() {
+  // For App Router (default)
+  useMongolytics();
+
+  // For Pages Router
+  useMongolytics({ routerType: 'pages' });
+
+  // ... your other component logic
+  return <div>...</div>
+}
+```
 
 ## Verification
 

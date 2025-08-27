@@ -8,6 +8,7 @@ export function Hero() {
     <section className="relative h-[80vh] min-h-[500px] flex items-center justify-center text-center grain-texture">
       <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent z-10" />
       <div className="container relative z-20">
+        
         <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl">
           Effortless Traffic Tracking for Next.js
         </h1>
@@ -16,14 +17,10 @@ export function Hero() {
           of your websites traffic data.
         </p>
         <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
-          {/* 
-            Button is now correctly styled using the primary color (emerald-500) from your theme.
-            No extra className is needed.
-          */}
           <Button
             size="lg"
             asChild
-            className="bg-emerald-500 hover:bg-emerald-600 text-white" // Add this line
+            className="bg-emerald-500 hover:bg-emerald-600 text-white"
           >
             <Link href="#documentation">Get Started Now</Link>
           </Button>

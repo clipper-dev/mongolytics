@@ -1,3 +1,4 @@
+"use client"
 // /src/client/useMongolytics.ts (Optimized Version)
 import { useEffect } from "react";
 import { useRouter } from "next/router";

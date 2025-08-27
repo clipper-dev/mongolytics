@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/brand/logo";
 import { Github } from "lucide-react";
 import Link from "next/link";
-import { GITHUB_URL } from "@/data/config";
+import { GITHUB_URL } from "@/data/links";
 
 export function Navbar() {
   return (
@@ -19,7 +19,7 @@ export function Navbar() {
           </Link>
           <Link
             className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
-            href="#documentation"
+            href="/docs"
           >
             Docs
           </Link>
@@ -32,7 +32,7 @@ export function Navbar() {
           </Button>
           <Button
             asChild
-            className="bg-emerald-500 hover:bg-emerald-600 text-white" // Add this line
+            className="bg-emerald-500 hover:bg-emerald-600 text-white mr-2 md:mr-0" // Add this line
           >
             <Link href="#documentation">Get Started Now</Link>
           </Button>
