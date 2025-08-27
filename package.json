@@ -1,0 +1,21 @@
+{
+  "name": "mongolytics-monorepo",
+  "version": "1.0.0",
+  "description": "Monorepo for the Mongolytics project",
+  "private": false,
+  "scripts": {
+    "build": "npm run build -w @clipper-dev/mongolytics-next",
+    "dev": "npm run dev -w @clipper-dev/mongolytics-next"     
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "workspaces": [
+    "packages/*"
+  ],
+  "devDependencies": {
+    "@types/node": "^24.3.0",
+    "@types/react": "^19.1.12",
+    "typescript": "^5.9.2"
+  }
+}

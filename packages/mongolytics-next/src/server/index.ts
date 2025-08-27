@@ -1,0 +1,1 @@
+export { mongolyticsHandler } from './handler';

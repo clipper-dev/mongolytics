@@ -1,0 +1,38 @@
+{
+  "name": "@clipper-dev/mongolytics-next",
+  "version": "0.1.0",
+  "description": "Self-hosted, MongoDB-powered analytics for React/Next.js",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": "./dist/index.js",
+    "./client": "./dist/client/index.js",
+    "./server": "./dist/server/index.js"
+  },
+  "keywords": [
+    "mongolytics",
+    "analytics",
+    "mongodb",
+    "nextjs",
+    "react",
+    "self-hosted"
+  ],
+  "author": "Eric Kulbiej",
+  "license": "MIT",
+  "peerDependencies": {
+    "next": "^12.0.0 || ^13.0.0 || ^14.0.0",
+    "react": "^17.0.0 || ^18.0.0"
+  },
+  "dependencies": {
+    "mongodb": "^6.19.0",
+    "uuid": "^11.1.0"
+  }
+}
