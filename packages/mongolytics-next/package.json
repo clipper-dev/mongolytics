@@ -1,21 +1,41 @@
 {
   "name": "@clipper-dev/mongolytics-next",
-  "version": "1.0.3",
+  "version": "1.0.7",
   "description": "Self-hosted, MongoDB-powered analytics for React/Next.js",
   "scripts": {
     "build": "tsc",
-    "dev": "tsc --watch"
+    "dev": "tsc --watch",
+    "prepublishOnly": "npm run build"
   },
   "exports": {
-    ".": "./index.ts",
-    "./client": "./src/client/index.ts",
-    "./server": "./src/server/index.ts",
-    "./dashboards": "./src/dashboards/index.ts"
+    "./client": {
+      "import": "./dist/client/index.js",
+      "require": "./dist/client/index.js", 
+      "types": "./dist/client/index.d.ts"
+    },
+    "./server": {
+      "import": "./dist/server/index.js",
+      "require": "./dist/server/index.js",
+      "types": "./dist/server/index.d.ts"
+    },
+    "./dashboards": {
+      "import": "./dist/dashboards/index.js",
+      "require": "./dist/dashboards/index.js",
+      "types": "./dist/dashboards/index.d.ts"
+    }
   },
-  "main": "dist/server/index.js",
-  "types": "dist/server/index.d.ts",
+  "typesVersions": {
+    "*": {
+      "client": ["./dist/client/index.d.ts"],
+      "server": ["./dist/server/index.d.ts"],
+      "dashboards": ["./dist/dashboards/index.d.ts"],
+      "types": ["./dist/types.d.ts"]
+    }
+  },
   "files": [
-    "dist"
+    "dist",
+    "README.md",
+    "LICENSE"
   ],
   "keywords": [
     "mongolytics",
@@ -34,6 +54,11 @@
   },
   "dependencies": {
     "mongodb": "^6.19.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/react": "^18.0.0",
+    "typescript": "^5.0.0"
   },
   "homepage": "https://www.mongolytics.org",
   "repository": {

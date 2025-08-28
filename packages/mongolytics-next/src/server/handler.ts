@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { ObjectId } from "mongodb";
-import { AnalyticsData, PageStat, SessionDataPayload } from "../..";
 import { connectToDatabase } from "./db";
+import { AnalyticsData, PageStat, SessionDataPayload } from "types";
 
 // Helper to validate the incoming string
 const isValidObjectIdString = (id: string) => /^[0-9a-f]{24}$/.test(id);
