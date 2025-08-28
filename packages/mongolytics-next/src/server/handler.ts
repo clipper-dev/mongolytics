@@ -1,6 +1,5 @@
-// app/api/mongolytics/route.ts
-import { NextRequest, NextResponse } from "next/server";
-import { ObjectId } from "mongodb"; // <-- IMPORTANT: Import ObjectId from the driver
+import { NextResponse } from "next/server";
+import { ObjectId } from "mongodb";
 import { AnalyticsData, PageStat, SessionDataPayload } from "../..";
 import { connectToDatabase } from "./db";
 
@@ -8,8 +7,8 @@ import { connectToDatabase } from "./db";
 const isValidObjectIdString = (id: string) => /^[0-9a-f]{24}$/.test(id);
 
 export async function POST(
-  request: NextRequest,
-  context: { params: Promise<{}> }  // Add the context parameter
+  request: Request,  // Use Request instead of NextRequest
+  context: { params: Promise<{}> }
 ) {
   try {
     const sessionData: SessionDataPayload = await request.json();
@@ -25,8 +24,9 @@ export async function POST(
     const { db, collectionSessions } = await connectToDatabase();
     const collection = db.collection(collectionSessions ?? "sessions");
 
-    const ipAddress =
-      request.ip ?? request.headers.get("x-forwarded-for") ?? "unknown";
+    // Get IP address from headers instead of request.ip
+    const forwardedFor = request.headers.get("x-forwarded-for");
+    const ipAddress = forwardedFor?.split(',')[0]?.trim() ?? "unknown";
     const userAgent = request.headers.get("user-agent");
 
     const sessionObjectId = new ObjectId(sessionData.sessionId);
@@ -122,8 +122,8 @@ export async function POST(
 
 // GET handler
 export async function GET(
-  request: NextRequest,
-  context: { params: Promise<{}> }  // Add the context parameter
+  request: Request,  // Use Request instead of NextRequest
+  context: { params: Promise<{}> }
 ) {
   try {
     const { db, collectionSessions } = await connectToDatabase();
