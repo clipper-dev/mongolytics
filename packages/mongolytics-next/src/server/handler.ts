@@ -7,7 +7,10 @@ import { connectToDatabase } from "./db";
 // Helper to validate the incoming string
 const isValidObjectIdString = (id: string) => /^[0-9a-f]{24}$/.test(id);
 
-export async function POST(request: NextRequest) {
+export async function POST(
+  request: NextRequest,
+  context: { params: Promise<{}> }  // Add the context parameter
+) {
   try {
     const sessionData: SessionDataPayload = await request.json();
 
@@ -118,7 +121,10 @@ export async function POST(request: NextRequest) {
 }
 
 // GET handler
-export async function GET() {
+export async function GET(
+  request: NextRequest,
+  context: { params: Promise<{}> }  // Add the context parameter
+) {
   try {
     const { db, collectionSessions } = await connectToDatabase();
     const collection = db.collection(collectionSessions ?? "sessions");
