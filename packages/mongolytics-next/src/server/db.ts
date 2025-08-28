@@ -3,6 +3,7 @@ import { MongoClient, Db } from 'mongodb';
 
 const uri = process.env.MONGOLYTICS_URI;
 const dbName = process.env.MONGOLYTICS_DB_NAME;
+const collectionSessions = process.env.MONGOLYTICS_COLLECTION_SESSIONS ?? 'sessions';
 
 if (!uri) {
   throw new Error('Please define the MONGOLYTICS_URI environment variable');
@@ -16,7 +17,7 @@ let cachedDb: Db | null = null;
 
 export async function connectToDatabase() {
   if (cachedClient && cachedDb) {
-    return { client: cachedClient, db: cachedDb };
+    return { client: cachedClient, db: cachedDb, collectionSessions };
   }
 
   const client = new MongoClient(uri!);
@@ -26,5 +27,5 @@ export async function connectToDatabase() {
   cachedClient = client;
   cachedDb = db;
 
-  return { client, db };
+  return { client, db, collectionSessions };
 }

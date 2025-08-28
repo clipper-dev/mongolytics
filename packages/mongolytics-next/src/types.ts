@@ -21,4 +21,17 @@ export interface SessionDocument extends SessionDataPayload {
   startTimestamp: Date;
   landingPage: string;
   pageviews: number;
+  visitedPages: PageStat[];
+}
+
+// Define the shape of our aggregated data for type safety
+export interface PageStat {
+  path: string;
+  count: number;
+}
+
+export interface AnalyticsData {
+  totalSessions: number;
+  totalPageviews: number;
+  topPages: PageStat[];
 }

@@ -1,1 +1,1 @@
-export { mongolyticsHandler } from './handler';
+export { POST, GET } from './handler';

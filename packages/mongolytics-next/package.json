@@ -2,20 +2,17 @@
   "name": "@clipper-dev/mongolytics-next",
   "version": "0.1.0",
   "description": "Self-hosted, MongoDB-powered analytics for React/Next.js",
-  "main": "dist/index.js",
-  "module": "dist/index.mjs",
-  "types": "dist/index.d.ts",
+  "main": "index.ts",
+  "types": "index.ts",
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch"
   },
-  "files": [
-    "dist"
-  ],
   "exports": {
-    ".": "./dist/index.js",
-    "./client": "./dist/client/index.js",
-    "./server": "./dist/server/index.js"
+    ".": "./index.ts",
+    "./client": "./src/client/index.ts",
+    "./server": "./src/server/index.ts",
+    "./dashboards": "./src/dashboards/index.ts"
   },
   "keywords": [
     "mongolytics",
@@ -32,7 +29,6 @@
     "react": "^17.0.0 || ^18.0.0"
   },
   "dependencies": {
-    "mongodb": "^6.19.0",
-    "uuid": "^11.1.0"
+    "mongodb": "^6.19.0"
   }
 }

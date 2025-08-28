@@ -8,6 +8,11 @@ const codeStep2 = `# .env.local
 MONGOLYTICS_URI="your-mongodb-atlas-connection-string"
 MONGOLYTICS_DB_NAME="your-analytics-database-name"`;
 
+const codeStep2a = `# .env.local
+
+MONGOLYTICS_COLLECTION_SESSIONS="mongolytics-sessions"
+`;
+
 const codeStep3App = `// app/api/mongolytics/route.ts
 import { mongolyticsAppRouteHandler as POST } from '@clipper-dev/mongolytics-next/server';
 
@@ -84,7 +89,12 @@ export default function InstallationPage() {
         ).
       </p>
       <CodeBlock title="/.env.local" code={codeStep2} />
-
+      <p>
+        By default, the package will use the <code>sessions</code> collection.
+        This may create a conflict with your own collections. To use a custom
+        collection nam, simply define it in the <code>.env.local</code> file.
+      </p>
+      <CodeBlock title="/.env.local" code={codeStep2a} />
       <h2>Step 3: Create the API Endpoint</h2>
       <p>
         This single API endpoint will securely receive tracking data from your
@@ -129,10 +139,10 @@ export default function InstallationPage() {
 
       <h2>Step 5: Verify Your Setup</h2>
       <p>
-        That&apos;s it! To verify your installation, run your Next.js application,
-        navigate to a few pages, and then check your MongoDB database. You
-        should see a new collection named <strong>sessions</strong> containing
-        your website&apos;s traffic data.
+        That&apos;s it! To verify your installation, run your Next.js
+        application, navigate to a few pages, and then check your MongoDB
+        database. You should see a new collection named{" "}
+        <strong>sessions</strong> containing your website&apos;s traffic data.
       </p>
     </article>
   );

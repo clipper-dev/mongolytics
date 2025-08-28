@@ -21,6 +21,7 @@ export function useMongolytics(options: MongolyticsOptions = {}) {
     if (typeof window === "undefined") return;
 
     const data: SessionDataPayload = {
+      
       visitorId: getOrSetVisitorId(),
       sessionId: getOrSetSessionId(),
       hostname: window.location.hostname,
@@ -28,7 +29,7 @@ export function useMongolytics(options: MongolyticsOptions = {}) {
       screenResolution: `${window.screen.width}x${window.screen.height}`,
       url: window.location.href,
       pathname: window.location.pathname,
-    };
+    } as SessionDataPayload;
 
     // Use sendBeacon for reliable, non-blocking tracking
     navigator.sendBeacon("/api/mongolytics", JSON.stringify(data));

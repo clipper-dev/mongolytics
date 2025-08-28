@@ -23,6 +23,12 @@ export function Navbar() {
           >
             Docs
           </Link>
+          <Link
+            className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+            href="/example"
+          >
+            Example
+          </Link>
         </nav>
         <div className="flex items-center justify-end gap-4">
           <Button variant="ghost" asChild className="hidden sm:inline-flex">

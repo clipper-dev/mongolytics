@@ -5,6 +5,8 @@ import { cn } from "@/lib/utils";
 import { Navbar } from "@/components/nav/navbar";
 import { Footer } from "@/components/nav/footer";
 
+import { Mongolyth } from "@clipper-dev/mongolytics-next/client"
+
 // Configure the font
 const spaceGrotesk = Space_Grotesk({ subsets: ["latin"] });
 
@@ -27,6 +29,7 @@ export default function RootLayout({
           spaceGrotesk.className
         )}
       >
+        <Mongolyth />
         <Navbar />
         {children}
         <Footer />
