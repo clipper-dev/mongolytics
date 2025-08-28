@@ -17,13 +17,15 @@
   "files": [
     "dist"
   ],
+
   "keywords": [
     "mongolytics",
     "analytics",
     "mongodb",
     "nextjs",
     "react",
-    "self-hosted"
+    "self-hosted",
+    "next"
   ],
   "author": "Eric Kulbiej",
   "license": "MIT",
